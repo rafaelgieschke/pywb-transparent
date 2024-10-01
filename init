@@ -1,0 +1,14 @@
+#!/bin/sh -xeu
+
+(
+  cd /webarchive
+  exec /docker-entrypoint.sh uwsgi /uwsgi/uwsgi.ini
+) &
+
+ownIp="$(ip address show eth0 | awk -F ' +|/' '/inet/ { print $3 }')"
+
+cp /dnsmasq.conf . || echo >dnsmasq.conf
+printf '\naddress=/#/%s\n' "$ownIp" >>dnsmasq.conf
+cat dnsmasq.conf
+
+dnsmasq --no-hosts --no-resolv -dC dnsmasq.conf

@@ -32,3 +32,12 @@ EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["uwsgi", "/uwsgi/uwsgi.ini"]
 
+COPY force-proxy.patch /
+RUN cd /usr/local/lib/python*/site-packages; git apply --unsafe-paths /force-proxy.patch
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  dnsmasq iproute2 \
+  && apt-get clean
+WORKDIR /proxy
+COPY init ./
+CMD /proxy/init

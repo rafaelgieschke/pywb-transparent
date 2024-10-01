@@ -1,0 +1,22 @@
+diff --git a/wsgiprox/wsgiprox.py b/wsgiprox/wsgiprox.py
+index ce286b4..0735d1d 100644
+--- a/wsgiprox/wsgiprox.py
++++ b/wsgiprox/wsgiprox.py
+@@ -401,6 +401,8 @@ class WSGIProxMiddleware(object):
+         if WebSocketHandler == object:
+             self.enable_ws = None
+ 
++        self.force_proxy = proxy_options.get('force_proxy', False)
++
+     def wsgi(self, env, start_response):
+         # see if the host matches one of the proxy app hosts
+         # if so, try to see if there is an wsgi app set
+@@ -417,6 +419,8 @@ class WSGIProxMiddleware(object):
+         return self._wsgi(env, start_response)
+ 
+     def __call__(self, env, start_response):
++        if self.force_proxy and not env["REQUEST_URI"].startswith("http://"):
++            env["REQUEST_URI"] = "http://{0}{1}".format(env["HTTP_HOST"], env["REQUEST_URI"])
+         if env['REQUEST_METHOD'] == 'CONNECT':
+             return self.handle_connect(env, start_response)
+         else:

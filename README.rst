@@ -1,3 +1,25 @@
+Transparent proxy fork of pywb
+==============================
+
+The ``proxy-ia`` branch allows to run pywb as a `transparent proxy <https://httpwg.org/specs/rfc7230.html#rfc.iref.t.2>`_ (using the patch ``force-proxy.patch``).
+
+In contrast to a `regular HTTP proxy server <https://httpwg.org/specs/rfc7230.html#rfc.iref.p.1>`_, a transparent proxy does not need to be configured on individual clients. Instead, it intercepts and handles regular HTTP connections on a network. The web archive can be made available locally, be hosted with a remote public web archiving service, or a mixture of both.
+
+See the example configuration (``config.yaml``), which makes pywb run on TCP port 80 (HTTP's default port) and transparently forward all HTTP requests to the Wayback Machine requesting a pre timestamp.
+
+Adding transparent proxy mode to pywb makes it possible to serve web archives to clients in emulation environments without having to make changes to their originally preserved state, as well as software that doesn't allow to change proxy settings or doesn't respect system-wide proxy configuration.
+
+Use cases:
+
+* Enrich emulation environments with a contemporaneous "ambient" web, including resources required to install legacy software
+
+* Provide fallback web archives containing external resources in addition to a server that has been completely preserved
+
+* Connect preserved software with specific web archives, such as online user guides
+
+* If the web archive represents the main artifact of a software object, load it into an emulation environment similar to a disk image
+
+
 Webrecorder pywb 2.8
 ====================
 

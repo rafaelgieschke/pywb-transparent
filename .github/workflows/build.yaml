@@ -1,0 +1,16 @@
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - run: |
+          docker login -u "$GITHUB_ACTOR" -p "$GITHUB_TOKEN" ghcr.io
+          docker build -t "ghcr.io/$GITHUB_REPOSITORY:$GITHUB_REF_NAME" .
+          docker push "ghcr.io/$GITHUB_REPOSITORY:$GITHUB_REF_NAME"
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      packages: write
